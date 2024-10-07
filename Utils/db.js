@@ -26,20 +26,21 @@ class DBClient {
     /**
      * Checks the status of the connection to the database
      */
-    return this.client.isConnected();
+    return this.client.topology.isConnected();
   }
 
   async nbUsers () {
     /**
      * Returns the number of documents in users collection
      */
-    return this.client.db().collection('users').countDocuments();
+    return await this.client.db().collection('users').countDocuments();
   }
 
   async nbFiles() {
     /**
      * Returns the number of documents in the files collection
      */
+    return await this.client.db().collection('files').countDocuments();
   }
 
 }
