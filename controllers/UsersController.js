@@ -3,6 +3,8 @@
  */
 import dbClient from "../Utils/db";
 import crypto from "crypto";
+import redisClient from "../Utils/redis";
+import { ObjectId } from 'mongodb';
 
 export default class UsersController {
    static async postNew(req, res) {
@@ -12,7 +14,7 @@ export default class UsersController {
     }
 
     if (!password) {
-      res.status(400).json({"Error":"password"})
+      res.status(400).json({"Error":"Missing password"})
     }
 
     const userexists = await dbClient.client.db().collection('users').findOne({ email })
@@ -31,6 +33,38 @@ export default class UsersController {
     }catch (err) {
       console.log()
       return res.status(500).json("Internal server error")
+    }
+  }
+
+  static async getMe(req, res) {
+    /**
+     * Retrieves a user based on the token
+     */
+    const xToken = req.headers['x-token'];
+    if (!xToken) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const key = `auth_${xToken}`
+    try {
+      const userId = await redisClient.get(key)
+
+      if(!userId) {
+      return res.status(401).json({ error: 'Unauthorized' }); 
+      }
+      
+      const query = {_id: new ObjectId(userId)}
+
+      const User = await dbClient.client.db().collection('users').findOne(query);
+
+      const { _id, email } = User;
+      const returnObj = {
+        id: _id,
+        email: email
+      };
+      console.log(returnObj)
+      return res.status(200).json(returnObj);
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
     }
   }
 }
