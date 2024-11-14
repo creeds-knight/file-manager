@@ -1,10 +1,10 @@
 /**
  * Contains all API endpoints
  */
-import AppController from "../controllers/AppController";
-import UsersController from "../controllers/UsersController"
-import AuthController from "../controllers/AuthController";
-import FilesController from "../controllers/FilesController";
+import AppController from '../controllers/AppController';
+import UsersController from '../controllers/UsersController';
+import AuthController from '../controllers/AuthController';
+import FilesController from '../controllers/FilesController';
 
 const routing = (app) => {
   app.get('/status', AppController.getStatus);
@@ -13,8 +13,13 @@ const routing = (app) => {
   app.get('/connect', AuthController.getConnect);
   app.get('/disconnect', AuthController.getDisconnect);
   app.get('/users/me', UsersController.getMe);
-  app.get('/files', FilesController.postUpload);
-
-}
+  app.post('/files', FilesController.postUpload);
+  app.get('/files/:id', FilesController.getShow);
+  app.get('/files', FilesController.getIndex);
+  app.get('/files/:id', FilesController.putPublish);
+  app.get('/files/:id', FilesController.putUnpublish);
+  app.get('/files/:id/data', FilesController.getFile);
+  app.get('/delete', UsersController.deleteUser);
+};
 
 export default routing;
