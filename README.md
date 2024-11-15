@@ -151,7 +151,7 @@ The application uses the following environment variables, which should be set in
   ```json 
   {"redis":true,
   "db":true
-  }```
+  }
 
 #### `GET /stats`
 - **Summary**: Get application statistics.
@@ -162,7 +162,7 @@ The application uses the following environment variables, which should be set in
   {
     "users":4,
     "files":30
-    }```
+    }
 
 
 ###  **User Endpoints**
@@ -175,7 +175,7 @@ The application uses the following environment variables, which should be set in
     {
         "email": "string",
         "password": "string"
-    }```
+    }
 
 - **Response**:
     `200: OK`: Returns user details
@@ -188,7 +188,7 @@ The application uses the following environment variables, which should be set in
         {
             "email": "string",
             "password": "string"
-        }```
+        }
 - **Response**:
     `200: OK`:
     ```json
@@ -204,7 +204,7 @@ The application uses the following environment variables, which should be set in
         {
             "email": "string",
             "password": "string"
-        }```
+        }
 - **Response**:
     `200: OK`:
 
@@ -215,7 +215,7 @@ The application uses the following environment variables, which should be set in
     ```json 
         {
             "x-token": "string",
-        }```
+        }
 - **Response**:
     `200: OK`:
     ```json
@@ -231,7 +231,7 @@ The application uses the following environment variables, which should be set in
     ```json 
         {
             "x-token": "string",
-        }```
+        }
 - **Request body**:
     ```json
     {
