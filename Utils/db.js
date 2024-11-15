@@ -1,7 +1,7 @@
 /**
  * This module contains the class DBCLient that creates an instance to the mongo database
  */
-import mongodb from "mongodb";
+import mongodb from 'mongodb';
 
 class DBClient {
   /**
@@ -16,10 +16,10 @@ class DBClient {
     const database = process.env.DB_DATABASE || 'files_manager';
     const url = `mongodb://${host}:${port}/${database}`;
 
-    this.client = new mongodb.MongoClient(url, { useUnifiedTopology: true});
+    this.client = new mongodb.MongoClient(url, { useUnifiedTopology: true });
     this.client.connect()
-    .then(() => console.log("successfully Connected to Mongo server"))
-    .catch((err) => console.error("Failed to connect to Mongo", err))
+      .then(() => console.log('successfully Connected to Mongo server'))
+      .catch((err) => console.error('Failed to connect to Mongo', err));
   }
 
   isAlive() {
@@ -29,10 +29,11 @@ class DBClient {
     return this.client.topology.isConnected();
   }
 
-  async nbUsers () {
+  async nbUsers() {
     /**
      * Returns the number of documents in users collection
      */
+    // eslint-disable-next-line no-return-await
     return await this.client.db().collection('users').countDocuments();
   }
 
@@ -40,9 +41,9 @@ class DBClient {
     /**
      * Returns the number of documents in the files collection
      */
+    // eslint-disable-next-line no-return-await
     return await this.client.db().collection('files').countDocuments();
   }
-
 }
 
 const dbClient = new DBClient();
