@@ -1,8 +1,8 @@
 /*
-This file setsup the redis client  
+This file setsup the redis client
 */
-import { createClient } from "redis";
-import { promisify } from "util";
+import { createClient } from 'redis';
+import { promisify } from 'util';
 
 class RedisClient {
   /**
@@ -10,19 +10,22 @@ class RedisClient {
    */
   constructor() {
     // Initializing the redis client
-    this.client = createClient();
+    const host = process.env.REDIS_HOST || '127.0.0.1';
+    const port = process.env.REDIS_PORT || 6379;
+    this.client = createClient({ host, port });
     this.connectionStatus = false;
-    this.client.on('error', (error)=>{
-      console.log("Failed Connection to redis client", error)
+    this.client.on('error', (error) => {
+      console.log('Failed Connection to redis client', error);
       this.connectionStatus = false;
     });
-    this.client.on('connect', ()=>{
-      console.log("Connected Successfully")
-      this.connectionStatus =  true;
+    this.client.on('connect', () => {
+      console.log('Connected Successfully to redis');
+      this.connectionStatus = true;
     });
   }
+
   isAlive() {
-    /**  
+    /**
      * Checks the status of the redis connection
     */
     return this.connectionStatus;
