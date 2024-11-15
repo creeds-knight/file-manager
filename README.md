@@ -76,24 +76,39 @@ The **File Manager** application provides an API to handle file uploads, file re
 
 ## Project Structure
 
-/file-manager
-    ├──server.js # Main Entry Point to the application
-    ├── /Controllers 
-        ├──AppController.js # Implementation of Application Management API's
-        ├──AuthController.js # Implementation of Authentication endpoints
-        ├──FileController.js # Implementation of File Endpoints
-        ├──UsersController.js # Implementation of User Endpoints
-    ├── /Utils 
-        ├──db.js # Contains functions for running mongodb
-        ├──redis.js #Contains functions for running redis
-        ├──mailer.js # Contains functions for sending an email
-        ├──getUserId.js # Contains functions to process User authentication and retrieval
-    ├──routes
-        ├──index.js # Destructed API endpoints.
-    ├──DockerFile # Docker utility file 
-    ├──docker-compose.yml # Utility for Containerization of application
-    ├──worker.js # Utitlity to start background processing
+- **`server.js`**  
+  The main entry point to the application. It initializes the app, configures the middleware, and starts the server on a specified port.
 
+- **`/Controllers`**  
+  Contains all the API controllers that manage the routes and logic for different resources:
+  - **`AppController.js`**: Handles application-level API endpoints.
+  - **`AuthController.js`**: Manages user authentication (e.g., login, registration).
+  - **`FileController.js`**: Handles file-related operations like uploading, downloading, and managing files.
+  - **`UsersController.js`**: Manages user-specific operations like user profile retrieval and deletion.
+
+- **`/Utils`**  
+  Utility functions and helper modules:
+  - **`db.js`**: Functions for interacting with MongoDB, such as database connections and queries.
+  - **`redis.js`**: Functions for interacting with Redis, such as caching and session storage.
+  - **`mailer.js`**: Contains functions for sending emails (e.g., account confirmation, notifications).
+  - **`getUserId.js`**: Utility to handle user authentication and extract user information from requests.
+
+- **`/routes`**  
+  Destructured API endpoints for organizing and routing requests:
+  - **`index.js`**: Contains all the defined API routes, which connect controllers with the corresponding paths.
+
+- **`DockerFile`**  
+  The Dockerfile defines the instructions for building the Docker image for the application, including dependencies and configuration.
+
+- **`docker-compose.yml`**  
+  Configuration file for Docker Compose to define the multi-container setup for the application, including services like the app, database, and cache.
+
+- **`worker.js`**  
+  A utility script to handle background tasks such as processing queues or performing asynchronous operations.
+
+---
+
+This structure ensures that the code is modular, scalable, and easy to maintain. Each component is logically separated into specific folders, making it easy to navigate and extend the application.
 
     
 
