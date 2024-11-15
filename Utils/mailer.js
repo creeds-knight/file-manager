@@ -54,8 +54,8 @@ async function getNewToken() {
  */
 async function authenticate() {
   const credentials = JSON.parse(await readFileAsync(CREDENTIALS_PATH, 'utf8')); // Fixed: Awaited readFileAsync
+  // console.log(credentials);
   // eslint-disable-next-line camelcase
-  console.log(credentials);
   const { client_id, client_secret, redirect_uris } = credentials.web;
   oauth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
