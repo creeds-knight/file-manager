@@ -76,7 +76,26 @@ The **File Manager** application provides an API to handle file uploads, file re
 
 ## Project Structure
 
-/file-manager ├── /src │ ├── /Controllers # API controllers for handling routes │ ├── /Models # MongoDB models (if applicable) │ ├── /Utils # Utility functions and helpers │ ├── app.js # Express app configuration │ └── server.js # Server entry point ├── /config # Docker and app configuration files ├── Dockerfile # Dockerfile for building the app container ├── docker-compose.yml # Docker Compose configuration ├── .env # Environment variables (not in version control) ├── package.json # Node.js dependencies and scripts └── README.md
+/file-manager
+    ├──server.js # Main Entry Point to the application
+    ├── /Controllers 
+        ├──AppController.js # Implementation of Application Management API's
+        ├──AuthController.js # Implementation of Authentication endpoints
+        ├──FileController.js # Implementation of File Endpoints
+        ├──UsersController.js # Implementation of User Endpoints
+    ├── /Utils 
+        ├──db.js # Contains functions for running mongodb
+        ├──redis.js #Contains functions for running redis
+        ├──mailer.js # Contains functions for sending an email
+        ├──getUserId.js # Contains functions to process User authentication and retrieval
+    ├──routes
+        ├──index.js # Destructed API endpoints.
+    ├──DockerFile # Docker utility file 
+    ├──docker-compose.yml # Utility for Containerization of application
+    ├──worker.js # Utitlity to start background processing
+
+
+    
 
 
 ## Environment Variables
@@ -122,18 +141,118 @@ The application uses the following environment variables, which should be set in
 
 ## API Documentation
 
-### **Authentication & User Management**
+### **APPLICATION STATUS**
 
-#### `POST /auth/new`
-- **Description**: Register a new user.
-- **Request Body**:
-  ```json
-  {
-    "email": "user@example.com",
-    "password": "securePassword"
+#### `GET /status`
+- **Summary**: Check the server status.
+- **Tags**: App
+- **Response**:
+  - `200 OK`: 
+  ```json 
+  {"redis":true,
+  "db":true
   }```
 
+#### `GET /stats`
+- **Summary**: Get application statistics.
+- **Tags**: App
 - **Response**:
-    - 201: Created: User successfully created
-    - 400 Bad Request: Missing email or password, or user already exists
+  - `200 OK`: 
+  ```json
+  {
+    "users":4,
+    "files":30
+    }```
 
+
+###  **User Endpoints**
+
+### `POST /users`
+- **Summary**: Create a new user.
+- **Tags**: Users
+- **Request Body**:
+    ```json
+    {
+        "email": "string",
+        "password": "string"
+    }```
+
+- **Response**:
+    `200: OK`: Returns user details
+
+### `GET /connect`
+- **Summary**: Generates a token for user to login.
+- **Tags**: Users
+- **Request body**:  
+    ```json 
+        {
+            "email": "string",
+            "password": "string"
+        }```
+- **Response**:
+    `200: OK`:
+    ```json
+    {
+        "token":"uuid-string"
+    }
+
+### `GET /disconnect`
+- **Summary**: Logout the user.
+- **Tags**: Users
+- **Request body**:  
+    ```json 
+        {
+            "email": "string",
+            "password": "string"
+        }```
+- **Response**:
+    `200: OK`:
+
+### `GET /users/me`
+- **Summary**: Retrieves user Information.
+- **Tags**: Users
+- **Request header**:  
+    ```json 
+        {
+            "x-token": "string",
+        }```
+- **Response**:
+    `200: OK`:
+    ```json
+    {
+        "id":"string",
+        "email":"string"
+    }
+
+### `GET /files`
+- **Summary**: Upload a file.
+- **Tags**: Files
+- **Request header**:  
+    ```json 
+        {
+            "x-token": "string",
+        }```
+- **Request body**:
+    ```json
+    {
+        "name": "string", 
+        "type": ["file","folder","image"], /* Can be one of this*/
+        "data": "SGVsbG8gV2Vic3RhY2shCg==",
+        "parentId": "Interger",
+        "isPublic": "boolean",
+    }
+- **Response**:
+    `200:OK`:
+    ```json
+    {
+        "id":"string",
+        "userId":"String",
+        "name":"String",
+        "type":"String",
+        "isPublic": "boolean",
+        "parentId": "integer"
+    }
+
+
+## LICENSE
+This markdown format cleanly organizes the API endpoints and responses, making it easy to read and reference for your project's documentation.
