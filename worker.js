@@ -67,9 +67,8 @@ userQueue.process(async (job, done) => {
   try {
     const mailSubject = 'Welcome to File Manager Project by Apedo Arthur';
     const mailContent = [
-      'div',
-      '<h3>Hello {{user.name}},</h3>',
-      'Welcome to <a href="">Files Manager</a>,',
+      '<h3>Hello, ,</h3>',
+      'Welcome to <a href="https://creeds-knight.github.io/Portfolio/">Files Manager</a>,',
       'a simple file Management API built with NOde.js by',
       '<a href""> Arthur apedo</a>.',
       'We hope it meets your needs.',
