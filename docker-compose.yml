@@ -1,0 +1,82 @@
+version: '3.8' # Specifies the Docker Compose version being used.
+
+services:
+  app:
+    # Defines the primary application service
+    build:
+      context: . # Specifies the build context, i.e., the current directory.
+      dockerfile: Dockerfile # Specifies the Dockerfile used to build this service.
+    ports:
+      - "3000:3000" # Maps port 3000 on the host to port 3000 in the container.
+    environment:
+      # Defines environment variables for the application.
+      - DB_HOST=mongodb # Hostname for the MongoDB service.
+      - DB_PORT=27017 # Port for the MongoDB service.
+      - DB_DATABASE=files_manager # Name of the database used by the application.
+      - REDIS_HOST=redis # Hostname for the Redis service.
+      - REDIS_PORT=6379 # Port for the Redis service.
+      - APP_PORT=3000 # Port used by the application.
+    depends_on:
+      # Ensures these services start before this one.
+      - mongodb
+      - redis
+    volumes:
+      - .:/files_manager # Mounts the current directory into the container for live development.
+    networks:
+      - file-manager-network # Connects the app service to the custom network.
+    command: [ "npm", "run", "start-server" ] # Command to start the application.
+
+  worker:
+    # Defines a worker service, potentially for background tasks.
+    build:
+      context: . # Uses the same build context as the `app` service.
+      dockerfile: Dockerfile # Uses the same Dockerfile as the `app` service.
+    environment:
+      # Environment variables for the worker.
+      - DB_HOST=mongodb
+      - DB_PORT=27017
+      - DB_DATABASE=files_manager
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      # Ensures these services start before this one.
+      - app
+      - mongodb
+      - redis
+    volumes:
+      - .:/files_manager # Shares the code directory with the container.
+    networks:
+      - file-manager-network # Connects the worker service to the custom network.
+    command: [ "./start-both.sh" ] # Command to run the worker process.
+
+  mongodb:
+    # Defines the MongoDB database service.
+    image: mongo:6 # Specifies the MongoDB image version.
+    container_name: mongodb # Assigns a custom name to the container.
+    ports:
+      - "27017:27017" # Maps port 27017 on the host to port 27017 in the container.
+    volumes:
+      - mongo_data:/data/db # Persists MongoDB data on the host.
+    networks:
+      - file-manager-network # Connects MongoDB to the custom network.
+
+  redis:
+    # Defines the Redis in-memory data store service.
+    image: redis:alpine # Specifies the lightweight Redis image version.
+    container_name: redis # Assigns a custom name to the container.
+    ports:
+      - "6380:6379" # Maps port 6380 on the host to port 6379 in the container.
+    volumes:
+      - redis_data:/data/redis # Persists Redis data on the host.
+    networks:
+      - file-manager-network # Connects Redis to the custom network.
+
+volumes:
+  # Defines named volumes for persistent storage.
+  mongo_data: # Volume for MongoDB data.
+  redis_data: # Volume for Redis data.
+
+networks:
+  file-manager-network:
+    # Defines a custom bridge network for inter-container communication.
+    driver: bridge # Uses the bridge network driver (default for Docker Compose).
